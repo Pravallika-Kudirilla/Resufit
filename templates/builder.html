@@ -14,9 +14,9 @@
     <!-- Main Style Sheet (Embedded to keep things highly responsive) -->
     <style>
         :root {
-            --primary: #2f54eb;
-            --primary-hover: #1d39c4;
-            --primary-light: #f0f5ff;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-light: #f5f3ff;
             --dark-bg: #0f172a;
             --card-bg: rgba(255, 255, 255, 0.85);
             --border-color: #e2e8f0;
@@ -47,8 +47,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 40px;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
+            background: white;
             border-bottom: 1px solid var(--border-color);
             position: fixed;
             top: 0;
@@ -58,6 +57,33 @@
             height: 75px;
         }
 
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .template-select-nav {
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: #f8fafc;
+            color: var(--text-main);
+            outline: none;
+            cursor: pointer;
+            transition: var(--transition);
+            width: auto !important;
+            height: 38px;
+        }
+
+        .template-select-nav:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
         .logo {
             display: flex;
             align-items: center;
@@ -65,7 +91,7 @@
             font-family: 'Outfit', sans-serif;
             font-weight: 700;
             font-size: 22px;
-            color: var(--primary);
+            color: var(--text-main);
             text-decoration: none;
         }
 
@@ -78,7 +104,7 @@
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 12px;
         }
 
         .btn {
@@ -96,26 +122,56 @@
         }
 
         .btn-outline {
-            background: transparent;
+            background: white;
             color: var(--text-main);
             border: 1px solid var(--border-color);
         }
 
         .btn-outline:hover {
-            background: #f1f5f9;
+            background: #f8fafc;
             border-color: #cbd5e1;
         }
 
         .btn-primary {
             background: var(--primary);
             color: white;
-            box-shadow: 0 4px 12px rgba(47, 84, 235, 0.2);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
         }
 
         .btn-primary:hover {
             background: var(--primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(47, 84, 235, 0.3);
+            box-shadow: 0 6px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-import {
+            background: #6366f1;
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+        }
+        .btn-import:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+        .btn-export {
+            background: #db2777;
+            color: white;
+            box-shadow: 0 4px 12px rgba(219, 39, 119, 0.15);
+        }
+        .btn-export:hover {
+            background: #c2185b;
+            transform: translateY(-1px);
+        }
+
+        .btn-save {
+            background: #8b5cf6;
+            color: white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+        }
+        .btn-save:hover {
+            background: #7c3aed;
+            transform: translateY(-1px);
         }
 
         .btn-success {
@@ -137,8 +193,8 @@
         /* MAIN BUILDER CONTAINER */
         .builder-container {
             display: flex;
-            margin-top: 75px;
-            height: calc(100vh - 75px);
+            margin-top: 135px;
+            height: calc(100vh - 135px);
             overflow: hidden;
             width: 100vw;
         }
@@ -158,12 +214,19 @@
         /* PROGRESS STEPBAR */
         .stepper-header {
             display: flex;
-            gap: 5px;
-            padding: 15px 25px;
-            background: #f8fafc;
+            gap: 10px;
+            padding: 10px 40px;
+            background: white;
             border-bottom: 1px solid var(--border-color);
             overflow-x: auto;
             white-space: nowrap;
+            position: fixed;
+            top: 75px;
+            left: 0;
+            right: 0;
+            z-index: 90;
+            height: 60px;
+            align-items: center;
         }
 
         .step-pill {
@@ -172,7 +235,7 @@
             font-size: 13px;
             font-weight: 600;
             color: var(--text-muted);
-            background: white;
+            background: #f8fafc;
             border: 1px solid var(--border-color);
             cursor: pointer;
             transition: var(--transition);
@@ -189,7 +252,7 @@
             background: var(--primary);
             color: white;
             border-color: var(--primary);
-            box-shadow: 0 4px 10px rgba(47, 84, 235, 0.15);
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.15);
         }
 
         .step-pill.completed {
@@ -567,7 +630,7 @@
         /* PREVIEW PANEL (RIGHT) */
         .preview-panel {
             width: 52%;
-            background: #475569;
+            background: #f1f5f9;
             display: flex;
             flex-direction: column;
             height: 100%;
@@ -577,13 +640,13 @@
 
         .preview-toolbar {
             padding: 12px 25px;
-            background: #334155;
-            border-bottom: 1px solid #1e293b;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 10;
-            color: white;
+            color: var(--text-main);
         }
 
         .zoom-controls {
@@ -601,14 +664,14 @@
         .zoom-val-text {
             font-size: 12px;
             font-weight: 600;
-            color: #cbd5e1;
+            color: var(--text-muted);
             width: 40px;
         }
 
         .toolbar-btn {
-            background: #1e293b;
-            border: 1px solid #475569;
-            color: #cbd5e1;
+            background: white;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
             width: 32px;
             height: 32px;
             border-radius: 8px;
@@ -620,8 +683,9 @@
         }
 
         .toolbar-btn:hover {
-            background: #475569;
-            color: white;
+            background: #f8fafc;
+            color: var(--primary);
+            border-color: #cbd5e1;
         }
 
         .preview-viewport {
@@ -632,7 +696,7 @@
             justify-content: center;
             align-items: flex-start;
             position: relative;
-            background: #334155;
+            background: #f1f5f9;
         }
 
         .preview-sheet-container {
@@ -649,7 +713,7 @@
             background: white;
             background-image: linear-gradient(to bottom, transparent 296.6mm, #cbd5e1 296.6mm, #cbd5e1 297mm);
             background-size: 100% 297mm;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.02);
             box-sizing: border-box;
             position: relative;
             transform-origin: top left;
@@ -1791,7 +1855,7 @@
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
-            .navbar, .editor-panel, .preview-toolbar, .zoom-controls, .mobile-view-bar {
+            .navbar, .stepper-header, .editor-panel, .preview-toolbar, .zoom-controls, .mobile-view-bar {
                 display: none !important;
             }
             .builder-container {
@@ -1858,18 +1922,13 @@
 
     <!-- NAVBAR -->
     <nav class="navbar">
-        <a href="/" class="logo">
-            <img src="https://icons.veryicon.com/png/o/miscellaneous/general-icon-library/resume-7.png" alt="Logo">
-            Resufit
-        </a>
-        <div class="nav-links">
-            <a href="/home" class="btn btn-outline"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+        <div class="navbar-left">
+            <a href="/" class="logo">
+                <img src="https://icons.veryicon.com/png/o/miscellaneous/general-icon-library/resume-7.png" alt="Logo">
+                Resufit
+            </a>
             
-            <button class="btn btn-outline" onclick="triggerImportJSON()"><i class="fa-solid fa-file-import"></i> Import JSON</button>
-            <button class="btn btn-outline" onclick="exportJSON()"><i class="fa-solid fa-file-export"></i> Export JSON</button>
-            <input type="file" id="import-json-file" accept=".json" onchange="importJSON(event)" style="display: none;">
-
-            <select id="direct-template-switch" onchange="switchTemplate(parseInt(this.value))" style="width: 160px; padding: 8px 12px; font-size: 13px; border-radius: 10px;">
+            <select id="direct-template-switch" onchange="switchTemplate(parseInt(this.value))" class="template-select-nav">
                 <option value="1">Modern Corporate</option>
                 <option value="2">Minimalist Executive</option>
                 <option value="3">Tech Specialist</option>
@@ -1879,8 +1938,15 @@
                 <option value="7">Slate Clean & Elegant</option>
                 <option value="8">Silicon Valley Technical</option>
             </select>
+        </div>
+        <div class="nav-links">
+            <a href="/home" class="btn btn-outline">Dashboard</a>
+            
+            <button class="btn btn-import" onclick="triggerImportJSON()"><i class="fa-solid fa-file-import"></i> Import</button>
+            <button class="btn btn-export" onclick="exportJSON()"><i class="fa-solid fa-file-export"></i> Export</button>
+            <input type="file" id="import-json-file" accept=".json" onchange="importJSON(event)" style="display: none;">
 
-            <button class="btn btn-success" onclick="printResume()"><i class="fa-solid fa-download"></i> Save / Print PDF</button>
+            <button class="btn btn-save" onclick="printResume()"><i class="fa-solid fa-download"></i> Save PDF</button>
         </div>
     </nav>
 
@@ -1894,23 +1960,23 @@
         </button>
     </div>
 
+    <!-- STEP BAR -->
+    <div class="stepper-header">
+        <div class="step-pill active" onclick="jumpToStep(1)" id="pill-1"><i class="fa-solid fa-user"></i> Header</div>
+        <div class="step-pill" onclick="jumpToStep(2)" id="pill-2"><i class="fa-solid fa-pen-fancy"></i> Summary</div>
+        <div class="step-pill" onclick="jumpToStep(3)" id="pill-3"><i class="fa-solid fa-briefcase"></i> Experience</div>
+        <div class="step-pill" onclick="jumpToStep(4)" id="pill-4"><i class="fa-solid fa-diagram-project"></i> Projects</div>
+        <div class="step-pill" onclick="jumpToStep(5)" id="pill-5"><i class="fa-solid fa-graduation-cap"></i> Education</div>
+        <div class="step-pill" onclick="jumpToStep(6)" id="pill-6"><i class="fa-solid fa-code"></i> Skills</div>
+        <div class="step-pill" onclick="jumpToStep(7)" id="pill-7"><i class="fa-solid fa-award"></i> Extra</div>
+        <div class="step-pill" onclick="jumpToStep(8)" id="pill-8"><i class="fa-solid fa-wand-magic-sparkles"></i> Finish</div>
+    </div>
+
     <!-- CONTAINER -->
     <div class="builder-container">
         
         <!-- LEFT: FORM WIZARD -->
         <div class="editor-panel">
-            
-            <!-- STEP BAR -->
-            <div class="stepper-header">
-                <div class="step-pill active" onclick="jumpToStep(1)" id="pill-1"><i class="fa-solid fa-user"></i> Header</div>
-                <div class="step-pill" onclick="jumpToStep(2)" id="pill-2"><i class="fa-solid fa-pen-fancy"></i> Summary</div>
-                <div class="step-pill" onclick="jumpToStep(3)" id="pill-3"><i class="fa-solid fa-briefcase"></i> Experience</div>
-                <div class="step-pill" onclick="jumpToStep(4)" id="pill-4"><i class="fa-solid fa-diagram-project"></i> Projects</div>
-                <div class="step-pill" onclick="jumpToStep(5)" id="pill-5"><i class="fa-solid fa-graduation-cap"></i> Education</div>
-                <div class="step-pill" onclick="jumpToStep(6)" id="pill-6"><i class="fa-solid fa-code"></i> Skills</div>
-                <div class="step-pill" onclick="jumpToStep(7)" id="pill-7"><i class="fa-solid fa-award"></i> Extra</div>
-                <div class="step-pill" onclick="jumpToStep(8)" id="pill-8"><i class="fa-solid fa-wand-magic-sparkles"></i> Finish</div>
-            </div>
 
             <!-- STEP VIEWS -->
             <div class="editor-content">
