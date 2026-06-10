@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     <title>Resufit - Resume Analyzer</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,6 +36,11 @@
             <a href="#about" class="nav-item">About</a>
             <a href="#how-it-works" class="nav-item">How It Works</a>
             <a href="#services" class="nav-item">Services</a>
+            
+            <button class="btn btn-outline btn-theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" style="padding: 0.5rem; width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--primary-color); background: transparent; color: var(--primary-color); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; margin-right: 0.5rem;" title="Toggle Theme">
+                <i class="fa-solid fa-moon moon-icon"></i>
+                <i class="fa-solid fa-sun sun-icon" style="display: none;"></i>
+            </button>
             
             {% if session.get('user') %}
                 <a href="/logout" class="btn btn-outline">Sign Out</a>
@@ -272,12 +283,12 @@
     text-align:center;
     font-size:2rem;
     margin-bottom:25px;
-    color:#222;
+    color: var(--text-primary);
 }
 
 .faq-item{
-    background:#fff;
-    border:1px solid #e5e7eb;
+    background: var(--glass-bg);
+    border:1px solid var(--glass-border);
     border-radius:12px;
     margin-bottom:12px;
     overflow:hidden;
@@ -285,7 +296,7 @@
 }
 
 .faq-item:hover{
-    box-shadow:0 4px 12px rgba(0,0,0,.08);
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
 }
 
 .faq-question{
@@ -299,14 +310,14 @@
     cursor:pointer;
     font-size:1rem;
     font-weight:500;
-    color:#333;
+    color: var(--text-primary);
     text-align:left;
 }
 
 .arrow{
     font-size:1rem;
     transition:.3s;
-    color:#666;
+    color: var(--text-secondary);
 }
 
 .faq-answer{
@@ -317,10 +328,24 @@
 
 .faq-answer p{
     padding:0 18px 16px;
-    color:#666;
+    color: var(--text-secondary);
     line-height:1.6;
     font-size:.95rem;
     margin:0;
+}
+
+/* Theme Toggle Sun/Moon display styles */
+[data-theme="dark"] .sun-icon {
+    display: inline-block !important;
+}
+[data-theme="dark"] .moon-icon {
+    display: none !important;
+}
+[data-theme="light"] .sun-icon {
+    display: none !important;
+}
+[data-theme="light"] .moon-icon {
+    display: inline-block !important;
 }
 
 .faq-item.active .faq-answer{
@@ -437,6 +462,13 @@ document.querySelectorAll(".faq-question").forEach(btn => {
 
     <!-- SCRIPTS -->
     <script>
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const target = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', target);
+            localStorage.setItem('theme', target);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             // Modal Logic
             const modal = document.getElementById('signInModal');

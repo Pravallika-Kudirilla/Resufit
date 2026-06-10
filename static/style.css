@@ -22,6 +22,28 @@
     --danger: #dc2626;
     
     --transition-speed: 0.3s;
+    --modal-bg: white;
+}
+
+[data-theme="dark"] {
+    --primary-color: #6366f1; /* Lighter Indigo for dark bg */
+    --primary-hover: #4f46e5;
+    --secondary-color: #ec4899; /* Lighter Pink */
+    
+    --bg-gradient-start: #0f172a; /* Slate 900 */
+    --bg-gradient-end: #020617; /* Slate 950 */
+    
+    --glass-bg: rgba(15, 23, 42, 0.65); /* Translucent dark */
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
+    
+    --text-primary: #f8fafc; /* Slate 50 */
+    --text-secondary: #cbd5e1; /* Slate 300 */
+    --text-muted: #94a3b8; /* Slate 400 */
+    
+    --success: #10b981;
+    --danger: #ef4444;
+    --modal-bg: #1e293b;
 }
 
 * {
@@ -209,10 +231,10 @@ body {
     align-items: center;
     padding: 1rem 5%;
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.8); /* Light glass */
+    background: var(--glass-bg); /* Translucent theme glass */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid var(--glass-border);
     transition: all 0.3s ease;
     box-shadow: 0 2px 10px rgba(0,0,0,0.02);
 }
@@ -631,7 +653,7 @@ body {
     opacity: 0;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     margin: 1rem;
-    background: white !important; /* Force solid white for modal for contrast */
+    background: var(--modal-bg) !important; /* Force theme solid color for modal contrast */
 }
 
 .modal-overlay.active .modal-dialog {

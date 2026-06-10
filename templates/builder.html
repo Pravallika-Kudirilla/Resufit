@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resufit | Rich ATS Resume Builder</title>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <title>AI Resume Builder & Optimizer - Resufit</title>
     
     <!-- Modern Typography & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,6 +31,38 @@
             --success: #10b981;
             --danger: #ef4444;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg-color: #f8fafc;
+            --nav-bg: white;
+            --input-bg: #f8fafc;
+            --input-focus-bg: white;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --nav-bg: #1e293b;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --primary-light: #1e1b4b;
+            --input-bg: #0f172a;
+            --input-focus-bg: #1e293b;
+        }
+
+        /* Theme Toggle Sun/Moon display styles */
+        [data-theme="dark"] .sun-icon {
+            display: inline-block !important;
+        }
+        [data-theme="dark"] .moon-icon {
+            display: none !important;
+        }
+        [data-theme="light"] .sun-icon {
+            display: none !important;
+        }
+        [data-theme="light"] .moon-icon {
+            display: inline-block !important;
         }
 
         * {
@@ -35,7 +73,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #f8fafc;
+            background: var(--bg-color);
             color: var(--text-main);
             overflow-x: hidden;
             height: 100vh;
@@ -47,7 +85,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 40px;
-            background: white;
+            background: var(--nav-bg);
             border-bottom: 1px solid var(--border-color);
             position: fixed;
             top: 0;
@@ -69,7 +107,7 @@
             font-weight: 500;
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            background: #f8fafc;
+            background: var(--bg-color);
             color: var(--text-main);
             outline: none;
             cursor: pointer;
@@ -80,7 +118,7 @@
 
         .template-select-nav:focus {
             border-color: var(--primary);
-            background: white;
+            background: var(--input-focus-bg);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
 
@@ -202,7 +240,7 @@
         /* WIZARD PANEL (LEFT) */
         .editor-panel {
             width: 48%;
-            background: white;
+            background: var(--card-bg);
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
@@ -216,7 +254,7 @@
             display: flex;
             gap: 10px;
             padding: 10px 40px;
-            background: white;
+            background: var(--nav-bg);
             border-bottom: 1px solid var(--border-color);
             overflow-x: auto;
             white-space: nowrap;
@@ -235,7 +273,7 @@
             font-size: 13px;
             font-weight: 600;
             color: var(--text-muted);
-            background: #f8fafc;
+            background: var(--bg-color);
             border: 1px solid var(--border-color);
             cursor: pointer;
             transition: var(--transition);
@@ -345,14 +383,14 @@
             border-radius: 10px;
             font-family: inherit;
             color: var(--text-main);
-            background: #f8fafc;
+            background: var(--input-bg);
             transition: var(--transition);
         }
 
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
-            background: white;
+            background: var(--input-focus-bg);
             box-shadow: 0 0 0 4px rgba(47, 84, 235, 0.1);
         }
 
@@ -370,7 +408,7 @@
         }
 
         .accordion-card {
-            background: #f8fafc;
+            background: var(--bg-color);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             overflow: hidden;
@@ -389,14 +427,14 @@
             align-items: center;
             cursor: pointer;
             user-select: none;
-            background: #fff;
+            background: var(--card-bg);
             border-bottom: 1px solid transparent;
             transition: var(--transition);
         }
 
         .accordion-card.active .accordion-header {
             border-color: var(--border-color);
-            background: #f1f5f9;
+            background: var(--primary-light);
         }
 
         .accordion-title-box {
@@ -430,7 +468,7 @@
             align-items: center;
             justify-content: center;
             border: none;
-            background: white;
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
             color: var(--text-muted);
             cursor: pointer;
@@ -438,7 +476,7 @@
         }
 
         .action-icon-btn:hover {
-            background: #f1f5f9;
+            background: var(--border-color);
             color: var(--text-main);
         }
 
@@ -451,7 +489,7 @@
         .accordion-content {
             padding: 20px;
             display: none;
-            background: white;
+            background: var(--card-bg);
             gap: 15px;
             flex-direction: column;
         }
@@ -621,7 +659,7 @@
         .editor-footer {
             padding: 20px 40px;
             border-top: 1px solid var(--border-color);
-            background: #f8fafc;
+            background: var(--bg-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -630,7 +668,7 @@
         /* PREVIEW PANEL (RIGHT) */
         .preview-panel {
             width: 52%;
-            background: #f1f5f9;
+            background: var(--bg-color);
             display: flex;
             flex-direction: column;
             height: 100%;
@@ -696,7 +734,7 @@
             justify-content: center;
             align-items: flex-start;
             position: relative;
-            background: #f1f5f9;
+            background: var(--bg-color);
         }
 
         .preview-sheet-container {
@@ -1942,6 +1980,11 @@
         <div class="nav-links">
             <a href="/home" class="btn btn-outline">Dashboard</a>
             
+            <button class="btn btn-outline btn-theme-toggle" onclick="toggleTheme()" title="Toggle Theme" style="padding: 8px 12px; display: inline-flex; align-items: center; justify-content: center; height: 38px;">
+                <i class="fa-solid fa-moon moon-icon"></i>
+                <i class="fa-solid fa-sun sun-icon" style="display: none;"></i>
+            </button>
+            
             <button class="btn btn-import" onclick="triggerImportJSON()"><i class="fa-solid fa-file-import"></i> Import</button>
             <button class="btn btn-export" onclick="exportJSON()"><i class="fa-solid fa-file-export"></i> Export</button>
             <input type="file" id="import-json-file" accept=".json" onchange="importJSON(event)" style="display: none;">
@@ -2386,6 +2429,12 @@
 
     <!-- CORE ENGINE JS -->
     <script>
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const target = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', target);
+            localStorage.setItem('theme', target);
+        }
         // Set default template from Flask variable or default to 1
         let currentTemplate = typeof defaultTemplateIndex !== 'undefined' ? defaultTemplateIndex : 1;
         let currentStep = 1;

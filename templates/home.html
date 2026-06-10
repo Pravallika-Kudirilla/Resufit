@@ -3,25 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     <title>Resume Analyzer Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Modern Glassmorphism Theme */
+        /* Modern Light Theme Dashboard (Reference Design) */
         :root {
-            --primary: #0d6efd;
-            --primary-hover: #084298;
-            --bg-color: #f4f7fe;
-            --card-bg: rgba(255, 255, 255, 0.75);
-            --card-border: rgba(255, 255, 255, 0.5);
-            --text-main: #2b3674;
-            --text-muted: #a3aed1;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-color: #f9fafb;
+            --card-bg: #ffffff;
+            --card-border: #e5e7eb;
+            --text-main: #111827;
+            --text-muted: #4b5563;
+            --text-light: #9ca3af;
+            --sidebar-bg: #ffffff;
+            --sidebar-border: #e5e7eb;
+            --sidebar-text: #4b5563;
+            --sidebar-text-active: #2563eb;
+            --sidebar-bg-active: #eff6ff;
+            --search-bg: #f3f4f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --text-light: #64748b;
+            --sidebar-bg: #0f172a;
+            --sidebar-border: #334155;
+            --sidebar-text: #cbd5e1;
+            --sidebar-text-active: #3b82f6;
+            --sidebar-bg-active: #1e293b;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --search-bg: #0f172a;
         }
 
         body {
             margin: 0;
             font-family: 'Inter', sans-serif;
-            background: url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e") no-repeat center center/cover;
+            background: var(--bg-color);
             height: 100vh;
             overflow: hidden;
             position: relative;
@@ -29,88 +59,272 @@
         }
 
         body::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 15, 40, 0.6);
-            backdrop-filter: blur(8px);
-            z-index: 0;
+            display: none;
         }
 
         /* Sidebar */
         .slider-container {
-            width: 250px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            border-right: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 30px 20px;
+            width: 260px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--sidebar-border);
+            color: var(--sidebar-text);
+            padding: 24px 16px;
             position: fixed;
             left: 0; top: 0; bottom: 0;
             z-index: 10;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
         }
 
         .head {
             display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            gap: 4px;
+            padding-left: 8px;
+        }
+        .head-logo-wrap {
+            display: flex;
             align-items: center;
-            margin-bottom: 30px;
-        }
-        .head img {
-            width: 40px;
-            border-radius: 10px;
-            padding: 5px;
-        }
-        .head h4 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 700;
-            font-family:Verdana, Geneva, Tahoma, sans-serif;
-        }
-
-        .head h4 a {
-            color: white;
+            gap: 10px;
             text-decoration: none;
         }
-
-        h1.username {
+        .head-logo-wrap img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+        .head-logo-title {
             font-size: 18px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+            letter-spacing: -0.03em;
+        }
+        .head-subtitle {
+            font-size: 11px;
             font-weight: 500;
+            color: var(--text-light);
+            margin: 0;
+            padding-left: 42px;
+            margin-top: -6px;
+        }
+
+        /* Search Box Mock */
+        .sidebar-search-container {
+            position: relative;
             margin-bottom: 20px;
-            color: #00e0ff;
+            width: 100%;
+            padding: 0 4px;
+            box-sizing: border-box;
+        }
+        .sidebar-search-box {
+            width: 100%;
+            padding: 8px 12px 8px 34px;
+            background: var(--search-bg, #f3f4f6);
+            border: 1px solid var(--sidebar-border);
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+            outline: none;
+            box-sizing: border-box;
+            pointer-events: none;
+        }
+        .sidebar-search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 12px;
+        }
+        .sidebar-search-shortcut {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--card-bg);
+            border: 1px solid var(--sidebar-border);
+            border-radius: 4px;
+            padding: 1px 4px;
+            font-size: 10px;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        /* Navigation Categories */
+        .sidebar-category-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-light);
+            margin: 16px 0 6px 12px;
         }
 
         .slider {
             list-style: none;
             padding: 0;
             margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
         .slide {
-            padding: 15px 20px;
-            margin-bottom: 10px;
+            padding: 10px 14px;
             cursor: pointer;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            background: transparent;
+            color: var(--sidebar-text);
+            font-weight: 500;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-sizing: border-box;
         }
         .slide:hover, .slide.active {
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            transform: translateX(5px);
+            background: var(--sidebar-bg-active);
+            color: var(--sidebar-text-active);
+            font-weight: 600;
+        }
+        .slide-badge {
+            background: #eff6ff;
+            color: var(--primary);
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: auto;
+            border: 1px solid #dbeafe;
+        }
+
+        /* Sidebar Footer Elements */
+        .sidebar-footer {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 0 4px;
+        }
+        .sidebar-theme-toggle {
+            margin-left: auto;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+        .sidebar-theme-toggle:hover {
+            color: var(--primary);
+            background: var(--sidebar-bg-active);
+        }
+        .sidebar-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: var(--bg-color);
+            border-radius: 12px;
+            border: 1px solid var(--sidebar-border);
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            color: inherit;
+            box-sizing: border-box;
+        }
+        .sidebar-profile:hover {
+            background: var(--sidebar-bg-active);
+        }
+        .sidebar-profile-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #ec4899;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .sidebar-profile-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            text-align: left;
+        }
+        .sidebar-profile-name {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .sidebar-profile-role {
+            font-size: 10px;
+            color: var(--text-light);
+        }
+        .sidebar-profile-logout {
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-top: 0;
+            box-shadow: none !important;
+            margin-left: 8px;
+        }
+        .sidebar-profile-logout:hover {
+            color: #ef4444;
+            background: #fef2f2;
+            transform: none !important;
+        }
+
+        /* Dark Theme Toggle icon helper selectors */
+        [data-theme="dark"] .sun-icon {
+            display: block !important;
+        }
+        [data-theme="dark"] .moon-icon {
+            display: none !important;
+        }
+        [data-theme="light"] .sun-icon {
+            display: none !important;
+        }
+        [data-theme="light"] .moon-icon {
+            display: block !important;
         }
 
         /* Main Content */
         .main-content {
             position: relative;
             z-index: 2;
-            margin-left: 290px;
+            margin-left: 260px;
             padding: 40px;
             height: 100vh;
             overflow-y: auto;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
+            background: var(--bg-color);
         }
 
+        /* Header actions (Upload, Create dropdown layout) */
         .dashboard-header {
             display: flex;
             justify-content: space-between;
@@ -120,10 +334,141 @@
             gap: 15px;
         }
         .dashboard-header h1 {
-            color: white;
+            color: var(--text-main);
             margin: 0;
             font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+        .header-actions-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .header-btn-outline {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--sidebar-border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+        }
+        .header-btn-outline:hover {
+            background: var(--bg-color);
+            border-color: var(--sidebar-border);
+        }
+        .header-btn-solid {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            user-select: none;
+        }
+        .header-btn-solid:hover {
+            background: var(--primary-hover);
+        }
+        .header-info-text {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-right: 8px;
+        }
+
+        /* Centered Welcome Empty State */
+        .welcome-hub-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            max-width: 600px;
+            margin: auto;
+            padding: 40px 20px;
             flex-grow: 1;
+        }
+        .welcome-hub-icon-wrap {
+            width: 64px;
+            height: 64px;
+            background: var(--sidebar-bg-active);
+            color: var(--primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 24px;
+            border: 1px solid var(--sidebar-border);
+        }
+        .welcome-hub-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0 0 12px 0;
+            letter-spacing: -0.03em;
+        }
+        .welcome-hub-subtitle {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin: 0 0 32px 0;
+            line-height: 1.6;
+        }
+        .welcome-hub-cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            width: 100%;
+        }
+        .welcome-hub-action-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .welcome-hub-action-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+        .welcome-hub-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: var(--sidebar-bg-active);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border: 1px solid var(--sidebar-border);
+        }
+        .welcome-hub-card-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-main);
         }
 
         /* Mobile Menu Toggle */
@@ -133,7 +478,7 @@
         }
         .menu-toggle {
             display: none;
-            color: white;
+            color: var(--text-main);
             font-size: 24px;
             cursor: pointer;
             background: none;
@@ -141,30 +486,13 @@
             padding: 0;
         }
 
-        .bottom button {
-            background: linear-gradient(135deg, var(--primary), #00e0ff);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 240px;
-            transition: all 0.3s;
-            position: absolute;
-            left: 20px;
-            bottom: 20px;
-        }
-
-        /* Glass Cards */
+        /* Cards */
         .glass-card {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
             border: 1px solid var(--card-border);
-            border-radius: 20px;
+            border-radius: 16px;
             padding: 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.025);
             margin-bottom: 25px;
         }
 
@@ -177,6 +505,9 @@
         }
         .upload-section h2 {
             margin-top: 0;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            color: var(--text-main);
         }
 
         .labelFile {
@@ -187,15 +518,17 @@
             width: 100%;
             max-width: 400px;
             height: 180px;
-            border: 2px dashed var(--primary);
+            border: 2px dashed var(--sidebar-border);
             border-radius: 15px;
-            background: rgba(13, 110, 253, 0.05);
+            background: var(--bg-color);
             cursor: pointer;
             transition: all 0.3s;
-            color: var(--primary);
+            color: var(--text-muted);
         }
         .labelFile:hover {
-            background: rgba(13, 110, 253, 0.1);
+            background: var(--sidebar-bg-active);
+            border-color: var(--primary);
+            color: var(--primary);
             transform: translateY(-2px);
         }
         .input { display: none; }
@@ -204,18 +537,19 @@
             margin-top: 20px;
             padding: 12px 30px;
             border: none;
-            background: linear-gradient(135deg, var(--primary), #00e0ff);
+            background: var(--primary);
             color: white;
             border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.4);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
         }
         button:hover {
+            background: var(--primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(13, 110, 253, 0.6);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
         }
 
         /* Dashboard Grid */
@@ -263,14 +597,14 @@
         }
 
         .section-title {
-            font-size: 18px;
+            font-size: 14px;
             color: var(--text-main);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            border-bottom: 2px solid rgba(13, 110, 253, 0.2);
+            letter-spacing: 0.05em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--card-border);
             padding-bottom: 10px;
-            font-weight: 700;
+            font-weight: 800;
         }
 
         ul {
@@ -282,18 +616,18 @@
 
         .badge {
             display: inline-block;
-            padding: 6px 14px;
-            background: rgba(13, 110, 253, 0.1);
-            color: var(--primary);
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            margin: 5px 5px 5px 0;
-            border: 1px solid rgba(13, 110, 253, 0.2);
+            padding: 6px 12px;
+            background: var(--bg-color);
+            color: var(--text-muted);
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 500;
+            margin: 4px 6px 4px 0;
+            border: 1px solid var(--card-border);
         }
         
-        .badge.missing { background: rgba(220, 53, 69, 0.1); color: #dc3545; border-color: rgba(220, 53, 69, 0.2); }
-        .badge.strength { background: rgba(25, 135, 84, 0.1); color: #198754; border-color: rgba(25, 135, 84, 0.2); }
+        .badge.missing { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+        .badge.strength { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
 
         /* New styles for dynamic tabs & header upload */
         .header-upload-form {
@@ -302,7 +636,7 @@
         }
         /* Upload Button */
         .header-upload-btn {
-            background: linear-gradient(135deg, var(--primary), #00e0ff);
+            background: var(--primary);
             color: white;
             padding: 10px 20px;
             border-radius: 10px;
@@ -310,7 +644,7 @@
             font-weight: 600;
             font-size: 14px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.4);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -323,8 +657,9 @@
 
         /* Hover Effect */
         .header-upload-btn:hover {
+            background: var(--primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(13, 110, 253, 0.6);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
         }
 
         /* Click Effect */
@@ -352,14 +687,16 @@
         }
 
         .transparent-start {
-            background: rgba(255, 255, 255, 0.05) !important;
-            backdrop-filter: blur(5px) !important;
-            border: 1px dashed rgba(255,255,255,0.3) !important;
-            box-shadow: none !important;
-            color: white;
+            background: #ffffff !important;
+            border: 2px dashed #e2e8f0 !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+            color: var(--text-main);
         }
-        .transparent-start h2, .transparent-start h1, .transparent-start p, .transparent-start label {
-            color: white !important;
+        .transparent-start h2, .transparent-start h1, .transparent-start label {
+            color: var(--text-main) !important;
+        }
+        .transparent-start p {
+            color: var(--text-muted);
         }
         .tab-content {
             display: none;
@@ -423,10 +760,10 @@
         }
 
         .left-section p{
-            font-size:16px;
-            line-height:1.8;
-            color:#333;
-            max-width:650px;
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-muted);
+            max-width: 650px;
         }
 
         .buttons{
@@ -436,16 +773,17 @@
         .btn-primary{
             padding:10px 20px;
             border:none;
-            border-radius:50px;
-            background:#2f54eb;
+            border-radius:8px;
+            background:var(--primary);
             color:white;
             font-size:15px;
-            font-weight:500;
+            font-weight:600;
             cursor:pointer;
             transition:0.3s;
         }
 
         .btn-primary:hover{
+            background:var(--primary-hover);
             transform:translateY(-2px);
         }
 
@@ -456,10 +794,14 @@
         }
 
         .resume-card{
-            width:100%;
-            max-width:380px;
-            padding:15px;
-            border-radius:20px;
+            width: 100%;
+            max-width: 380px;
+            padding: 15px;
+            border-radius: 16px;
+            position: relative;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
         .resume-card img{
@@ -467,6 +809,20 @@
             height:auto;
             display:block;
             border-radius:12px;
+        }
+
+        .tag {
+            position: absolute;
+            top: -10px;
+            right: -5px;
+            background: var(--sidebar-bg-active);
+            color: var(--primary);
+            border: 1px solid var(--sidebar-border);
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
         }
 
     /* Tablet */
@@ -565,19 +921,89 @@
 <!-- Sidebar -->
 <div class="slider-container" id="sidebar">
     <div class="head">
-        <img src="https://icons.veryicon.com/png/o/miscellaneous/general-icon-library/resume-7.png" alt="Logo">
-        <h4><a href="/">Resufit</a></h4>
+        <a href="/" class="head-logo-wrap">
+            <img src="https://icons.veryicon.com/png/o/miscellaneous/general-icon-library/resume-7.png" alt="Logo">
+            <h4 class="head-logo-title">Resufit</h4>
+        </a>
+        <p class="head-subtitle">workspace</p>
     </div>    
-    <h1 class="username">Welcome, {{ username }}</h1>
+
+    <!-- Search Mockup -->
+    <div class="sidebar-search-container">
+        <svg class="sidebar-search-icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" class="sidebar-search-box" placeholder="Search anywhere" disabled>
+        <span class="sidebar-search-shortcut">⌘K</span>
+    </div>
+
+    <!-- Workspace Links -->
+    <div class="sidebar-category-title">Workspace</div>
     <ul class="slider">
-        <li class="slide active" onclick="switchTab('dashboard', this)">Dashboard</li>
-        <li class="slide" onclick="switchTab('job-fit', this)">Job Fit Analysis</li>
-        <li class="slide" onclick="switchTab('resume-builder', this)">Resume Builder</li>
+        <li class="slide active" onclick="switchTab('dashboard', this)">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            Home
+        </li>
+        <li class="slide" onclick="switchTab('job-fit', this)">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            Job Fit
+        </li>
     </ul>
-    <div class="bottom">
-        <ul>
-            <button onclick="window.location.href='/logout'">Logout</button>
-        </ul>
+
+    <!-- AI Tools Links -->
+    <div class="sidebar-category-title">AI Tools</div>
+    <ul class="slider">
+        <li class="slide" onclick="switchTab('resume-builder', this)">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+            </svg>
+            Builder
+            <span class="slide-badge">NEW</span>
+        </li>
+    </ul>
+
+    <!-- Bottom Sidebar (Profile Info) -->
+    <div class="sidebar-footer">
+        <div class="sidebar-profile">
+            <div class="sidebar-profile-avatar">
+                {{ username[0]|upper if username else 'U' }}
+            </div>
+            <div class="sidebar-profile-info">
+                <span class="sidebar-profile-name">{{ username }}</span>
+                <span class="sidebar-profile-role">Pro Account</span>
+            </div>
+            <button class="sidebar-theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+                <svg class="sun-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+            <button class="sidebar-profile-logout" onclick="window.location.href='/logout'" title="Logout">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+            </button>
+        </div>
     </div>
 </div>
 
@@ -600,46 +1026,83 @@
     <!-- Dashboard Tab -->
     <div id="dashboard" class="tab-content active">
 
+        <!-- Unified upload form with hidden file input -->
+        <form method="POST" enctype="multipart/form-data" id="analysis-form">
+            <input type="hidden" name="form_type" value="resume_analysis">
+            <input class="input" name="resume" id="file" type="file" onchange="this.form.submit()" required>
+        </form>
+
         <div class="dashboard-header">
-            <div style="display: flex; align-items: center; width: 100%;">
-                <h1>Resume Analysis Dashboard</h1>
-            </div>
-            
+            <h1>Resume Hub</h1>
             {% if analysis or error %}
-            <form method="POST" enctype="multipart/form-data" class="header-upload-form">
-                <input type="hidden" name="form_type" value="resume_analysis">
-                <label for="header-file" class="header-upload-btn">
-                    Upload New Resume
+            <div class="header-actions-container">
+
+                <span class="header-info-text">PDF (max 5 MB)</span>
+                <label for="file" class="header-btn-outline">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Upload Resume
                 </label>
-                <input class="input" name="resume" id="header-file" type="file" onchange="this.form.submit()" required>
-            </form>
+                <button class="header-btn-solid" onclick="switchTab('resume-builder', document.querySelector('.slide[onclick*=\'resume-builder\']'))" type="button">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Create with AI
+                </button>
+            </div>
             {% endif %}
         </div>
 
         {% if not analysis and not error %}
-        <!-- Upload Card -->
-        <div class="glass-card upload-section transparent-start">
-            <h2>Upload Your Resume</h2>
-            <form method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="form_type" value="resume_analysis">
-                <label for="file" class="labelFile">
-                    <svg xml:space="preserve" viewBox="0 0 184.69 184.69" width="50" height="50" fill="currentColor">
-                        <g><path d="M149.968,50.186c-8.017-14.308-23.796-22.515-40.717-19.813 C102.609,16.43,88.713,7.576,73.087,7.576c-22.117,0-40.112,17.994-40.112,40.115 c0,0.913,0.036,1.854,0.118,2.834C14.004,54.875,0,72.11,0,91.959 c0,23.456,19.082,42.535,42.538,42.535h33.623v-7.025H42.538 c-19.583,0-35.509-15.929-35.509-35.509 c0-17.526,13.084-32.621,30.442-35.105 c0.931-0.132,1.768-0.633,2.326-1.392 c0.555-0.755,0.795-1.704,0.644-2.63 c-0.297-1.904-0.447-3.582-0.447-5.139 c0-18.249,14.852-33.094,33.094-33.094 c13.703,0,25.789,8.26,30.803,21.04 c0.63,1.621,2.351,2.534,4.058,2.14 c15.425-3.568,29.919,3.883,36.604,17.168 c0.508,1.027,1.503,1.736,2.641,1.897 c17.368,2.473,30.481,17.569,30.481,35.112 c0,19.58-15.937,35.509-35.52,35.509H97.391v7.025h44.761 c23.459,0,42.538-19.079,42.538-42.535 C184.69,71.545,169.884,53.901,149.968,50.186z"/></g>
-                    </svg>
-                    <p style="margin-top: 15px; font-weight: 500;">Drag & Drop or Click to Browse File</p>
-                    <p style="font-size: 12px; color: #a3aed1;">(PDF)</p>
+        <!-- Welcome Hub Empty State -->
+        <div class="welcome-hub-container">
+            <div class="welcome-hub-icon-wrap">
+                <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+            </div>
+            <h2 class="welcome-hub-title">Welcome to your Resume Hub</h2>
+            <p class="welcome-hub-subtitle">Get started by creating a stunning resume with AI or uploading your existing one for detailed analysis.</p>
+            
+            <div class="welcome-hub-cards-grid">
+                <!-- Option 1: Create with AI -->
+                <div class="welcome-hub-action-card" onclick="switchTab('resume-builder', document.querySelector('.slide[onclick*=\'resume-builder\']'))">
+                    <div class="welcome-hub-card-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707-.707"></path>
+                        </svg>
+                    </div>
+                    <span class="welcome-hub-card-title">Create with AI</span>
+                </div>
+                
+                <!-- Option 2: Upload Resume -->
+                <label for="file" class="welcome-hub-action-card">
+                    <div class="welcome-hub-card-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </div>
+                    <span class="welcome-hub-card-title">Upload Resume</span>
                 </label>
-                <input class="input" name="resume" id="file" type="file" required>
-                <button type="submit">Analyze Profile</button>
-            </form>
+            </div>
         </div>
         {% endif %}
 
         {% if error %}
-        <div class="glass-card upload-section transparent-start">
-            <h2 style="color: #ff4d4d; margin-bottom: 10px;">Error Processing File</h2>
-            <p style="color: #ffb3b3; font-size: 16px;">{{ error }}</p>
-            <p style="color: white; margin-top: 15px;">Please use the <strong>Upload New Resume</strong> button above to try again.</p>
+        <div class="glass-card upload-section" style="background: #fff5f5; border-color: #fca5a5;">
+            <h2 style="color: #c53030; margin-bottom: 10px;">Error Processing File</h2>
+            <p style="color: #991b1b; font-size: 16px;">{{ error }}</p>
+            <p style="color: var(--text-muted); margin-top: 15px;">Please use the <strong>Upload New Resume</strong> button above to try again.</p>
         </div>
         {% endif %}
 
@@ -650,7 +1113,7 @@
         <!-- Scores Chart -->
         <div class="glass-card full-width">
             <h3 class="section-title">Candidate Summary</h3>
-            <div style="margin-top: 30px; padding: 20px; background: rgba(255, 255, 255, 0.4); border-radius: 12px; border-left: 4px solid var(--primary);">
+            <div style="margin-top: 30px; padding: 20px; background: #f8fafc; border-radius: 12px; border-left: 4px solid var(--primary); border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;">
                 <p style="margin: 0; font-size: 16px; line-height: 1.6;">
                     <p>{{ analysis.summary }}</p>
                 </p>
@@ -755,8 +1218,8 @@
         {% endif %}
 
         <!-- Missing Info & Suggestions -->
-        <div class="glass-card full-width" style="background: rgba(255, 235, 235, 0.7); border-color: rgba(220, 53, 69, 0.3);">
-            <h3 class="section-title" style="color: #dc3545; border-bottom-color: rgba(220, 53, 69, 0.2);">Missing Elements & Suggestions</h3>
+        <div class="glass-card full-width" style="background: #fff5f5; border-color: #fca5a5;">
+            <h3 class="section-title" style="color: #c53030; border-bottom-color: #fee2e2;">Missing Elements & Suggestions</h3>
             <p><strong>Required Elements Missing:</strong></p>
             <div>
                 {% for item in analysis.Missing_Information %}
@@ -770,7 +1233,7 @@
             
             {% if analysis.Suggestions and analysis.Suggestions|length > 0 %}
             <p style="margin-top: 20px;"><strong>Actionable Suggestions:</strong></p>
-            <ul style="color: #444;">
+            <ul style="color: var(--text-main);">
                 {% for sug in analysis.Suggestions %}
                     <li>{{ sug }}</li>
                 {% endfor %}
@@ -786,14 +1249,7 @@
         <p style="color: #dc3545;">The AI returned plain text instead of structured data.</p>
         <pre style="white-space: pre-wrap; word-wrap: break-word; background: rgba(0,0,0,0.05); padding: 15px; border-radius: 10px;">{{ analysis }}</pre>
     </div>
-    {% else %}
-    <div class="glass-card" style="text-align: center; color: #666; padding: 40px;">
-        <svg style="margin-bottom: 20px; color: var(--primary); opacity: 0.5;" xml:space="preserve" viewBox="0 0 184.69 184.69" width="80" height="80" fill="currentColor">
-            <g><path d="M149.968,50.186c-8.017-14.308-23.796-22.515-40.717-19.813 C102.609,16.43,88.713,7.576,73.087,7.576c-22.117,0-40.112,17.994-40.112,40.115 c0,0.913,0.036,1.854,0.118,2.834C14.004,54.875,0,72.11,0,91.959 c0,23.456,19.082,42.535,42.538,42.535h33.623v-7.025H42.538 c-19.583,0-35.509-15.929-35.509-35.509 c0-17.526,13.084-32.621,30.442-35.105 c0.931-0.132,1.768-0.633,2.326-1.392 c0.555-0.755,0.795-1.704,0.644-2.63 c-0.297-1.904-0.447-3.582-0.447-5.139 c0-18.249,14.852-33.094,33.094-33.094 c13.703,0,25.789,8.26,30.803,21.04 c0.63,1.621,2.351,2.534,4.058,2.14 c15.425-3.568,29.919,3.883,36.604,17.168 c0.508,1.027,1.503,1.736,2.641,1.897 c17.368,2.473,30.481,17.569,30.481,35.112 c0,19.58-15.937,35.509-35.52,35.509H97.391v7.025h44.761 c23.459,0,42.538-19.079,42.538-42.535 C184.69,71.545,169.884,53.901,149.968,50.186z"/></g>
-        </svg>
-        <p style="font-size: 18px; font-weight: 500;">No analysis to show yet.</p>
-        <p>Please upload a resume document above to get started.</p>
-    </div>
+
     {% endif %}
 
     </div> <!-- End Dashboard Tab -->
@@ -822,16 +1278,15 @@
             }
 
             .jobfit-card {
-                background: rgba(255, 255, 255, 0.85);
-                backdrop-filter: blur(12px);
-                border: 1px solid rgba(255, 255, 255, 0.4);
-                border-radius: 20px;
+                background: var(--card-bg);
+                border: 1px solid var(--card-border);
+                border-radius: 16px;
                 padding: 30px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.025);
                 display: flex;
                 flex-direction: column;
                 gap: 15px;
-                color: #1e293b;
+                color: var(--text-main);
             }
 
             .jobfit-full-width {
@@ -852,20 +1307,20 @@
             }
 
             .ats-badge.match {
-                background: rgba(25, 135, 84, 0.12);
-                color: #198754;
-                border-color: rgba(25, 135, 84, 0.25);
+                background: #dcfce7;
+                color: #166534;
+                border-color: #bbf7d0;
             }
 
             .ats-badge.missing {
-                background: rgba(220, 53, 69, 0.12);
-                color: #dc3545;
-                border-color: rgba(220, 53, 69, 0.25);
+                background: #fee2e2;
+                color: #991b1b;
+                border-color: #fca5a5;
             }
 
             .suggestion-card-item {
-                background: rgba(255, 255, 255, 0.6);
-                border: 1px solid rgba(226, 232, 240, 0.8);
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
                 padding: 15px 20px;
                 border-radius: 12px;
                 margin-bottom: 12px;
@@ -877,8 +1332,8 @@
 
             .suggestion-card-item:hover {
                 transform: translateX(5px);
-                background: rgba(255, 255, 255, 0.95);
-                box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+                background: #ffffff;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
                 border-color: var(--primary);
             }
 
@@ -886,7 +1341,7 @@
                 width: 36px;
                 height: 36px;
                 border-radius: 50%;
-                background: rgba(13, 110, 253, 0.08);
+                background: #f5f3ff;
                 color: var(--primary);
                 display: flex;
                 align-items: center;
@@ -921,37 +1376,39 @@
                 align-items: center;
                 width: 100%;
                 height: 180px;
-                border: 2px dashed rgba(13, 110, 253, 0.3);
+                border: 2px dashed var(--sidebar-border);
                 border-radius: 15px;
-                background: rgba(13, 110, 253, 0.02);
+                background: #f8fafc;
                 cursor: pointer;
                 transition: all 0.3s ease;
-                color: var(--primary);
+                color: var(--text-muted);
             }
 
             .labelFile-premium:hover {
-                background: rgba(13, 110, 253, 0.06);
+                background: #f5f3ff;
                 border-color: var(--primary);
+                color: var(--primary);
                 transform: translateY(-2px);
             }
 
             .btn-jobfit-submit {
                 padding: 12px 30px;
                 border: none;
-                background: linear-gradient(135deg, var(--primary), #00e0ff);
+                background: var(--primary);
                 color: white;
                 border-radius: 10px;
                 font-size: 16px;
                 font-weight: 600;
                 cursor: pointer;
                 transition: all 0.3s;
-                box-shadow: 0 4px 15px rgba(13, 110, 253, 0.4);
+                box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
                 width: 100%;
             }
 
             .btn-jobfit-submit:hover {
+                background: var(--primary-hover);
                 transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(13, 110, 253, 0.6);
+                box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
             }
 
             @media (max-width: 992px) {
@@ -962,9 +1419,21 @@
         </style>
 
         <div class="jobfit-container">
-            <div class="blog-header">
-                <h1 style="color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 800;">Job Fit Analysis</h1>
-                <p style="color: #cbd5e1; margin-top: 5px; font-size: 16px;">Compare your resume against any target role's criteria.</p>
+            <div class="dashboard-header">
+                <h1>Job Fit Analysis</h1>
+                {% if jobanalysis or error %}
+                <div class="header-actions-container">
+                    <span class="header-info-text">PDF format only</span>
+                    <label for="jobfit-file" class="header-btn-outline">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        Upload Resume
+                    </label>
+                </div>
+                {% endif %}
             </div>
 
             <form method="POST" enctype="multipart/form-data">
@@ -996,10 +1465,10 @@
             </form>
 
             {% if error %}
-            <div class="jobfit-card" style="background: rgba(220,53,69,0.15); border-color: rgba(220,53,69,0.3); color: white;">
-                <h3 style="color: #fca5a5; font-weight: 700; margin: 0;"><i class="fa-solid fa-circle-exclamation"></i> Error Parsing Documents</h3>
-                <p style="font-size: 14px; opacity: 0.95; margin: 0;">{{ error }}</p>
-                <p style="font-size: 12px; opacity: 0.7; margin: 0;">Please ensure you are uploading a standard, searchable text-based PDF resume.</p>
+            <div class="jobfit-card" style="background: #fff5f5; border-color: #fca5a5; color: #991b1b;">
+                <h3 style="color: #c53030; font-weight: 700; margin: 0;"><i class="fa-solid fa-circle-exclamation"></i> Error Parsing Documents</h3>
+                <p style="font-size: 14px; margin: 0; color: #991b1b;">{{ error }}</p>
+                <p style="font-size: 12px; margin: 0; color: #e11d48; opacity: 0.8;">Please ensure you are uploading a standard, searchable text-based PDF resume.</p>
             </div>
             {% endif %}
 
@@ -1012,13 +1481,13 @@
                 <div class="jobfit-card jobfit-full-width">
                     <h3 class="section-title" style="margin-top: 0; font-size: 16px; font-weight: 700; border-bottom: 2px solid rgba(13,110,253,0.1); padding-bottom: 8px; color: var(--text-main);"><i class="fa-solid fa-circle-info"></i> Candidate Match Profile</h3>
                     
-                    <div style="margin-top: 10px; padding: 20px; background: rgba(13, 110, 253, 0.03); border-radius: 15px; border-left: 5px solid var(--primary); display: flex; flex-direction: column; gap: 12px;">
+                    <div style="margin-top: 10px; padding: 20px; background: #f8fafc; border-radius: 15px; border-left: 5px solid var(--primary); border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 12px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <span style="font-weight: 700; font-size: 15px; color: #0f172a;">Overall Job Fit Score</span>
                             <span style="font-weight: 800; font-size: 26px; color: var(--primary);">{{ jobanalysis.score }}</span>
                         </div>
-                        <div style="width: 100%; height: 16px; background: rgba(0,0,0,0.06); border-radius: 30px; overflow: hidden; border: 1px solid rgba(255,255,255,0.4);">
-                            <div style="width: {{ jobanalysis.score }}; height: 100%; border-radius: 30px; background: linear-gradient(90deg, var(--primary), #00e0ff); box-shadow: 0 0 15px rgba(13, 110, 253, 0.3);"></div>
+                        <div style="width: 100%; height: 16px; background: #e2e8f0; border-radius: 30px; overflow: hidden; border: 1px solid #cbd5e1;">
+                            <div style="width: {{ jobanalysis.score }}; height: 100%; border-radius: 30px; background: var(--primary);"></div>
                         </div>
                     </div>
                 </div>
@@ -1097,7 +1566,7 @@
 
     <!-- ...........................................................Resume Builder................................................................. -->
 
-    <div id="resume-builder" class="tab-content transparent-start" style="padding: 40px; border-radius: 20px; text-align: center; margin-top: 20px;">
+    <div id="resume-builder" class="tab-content" style="padding: 40px; border-radius: 16px; text-align: center; margin-top: 20px; background: var(--card-bg); border: 1px solid var(--card-border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.025);">
         
         <div class="container">
     <!-- LEFT CONTENT -->
@@ -1126,6 +1595,15 @@
 
 <!-- Scripts -->
 <script>
+    // ===============================
+    // Theme Toggling Logic
+    // ===============================
+    function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || 'light';
+        const target = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', target);
+        localStorage.setItem('theme', target);
+    }
 
     // ===============================
     // Sidebar Toggle Logic
