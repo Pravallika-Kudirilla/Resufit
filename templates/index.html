@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
         (function() {
-            const theme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.setAttribute('data-theme', 'light');
         })();
     </script>
     <title>Resufit - Resume Analyzer</title>
@@ -36,11 +35,6 @@
             <a href="#about" class="nav-item">About</a>
             <a href="#how-it-works" class="nav-item">How It Works</a>
             <a href="#services" class="nav-item">Services</a>
-            
-            <button class="btn btn-outline btn-theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" style="padding: 0.5rem; width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--primary-color); background: transparent; color: var(--primary-color); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; margin-right: 0.5rem;" title="Toggle Theme">
-                <i class="fa-solid fa-moon moon-icon"></i>
-                <i class="fa-solid fa-sun sun-icon" style="display: none;"></i>
-            </button>
             
             {% if session.get('user') %}
                 <a href="/logout" class="btn btn-outline">Sign Out</a>
@@ -462,12 +456,6 @@ document.querySelectorAll(".faq-question").forEach(btn => {
 
     <!-- SCRIPTS -->
     <script>
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme') || 'light';
-            const target = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', target);
-            localStorage.setItem('theme', target);
-        }
 
         document.addEventListener('DOMContentLoaded', () => {
             // Modal Logic
@@ -504,6 +492,26 @@ document.querySelectorAll(".faq-question").forEach(btn => {
             if (navToggle && navLinks) {
                 navToggle.addEventListener('click', () => {
                     navLinks.classList.toggle('active');
+                    const icon = navToggle.querySelector('i');
+                    if (navLinks.classList.contains('active')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-xmark');
+                    } else {
+                        icon.classList.remove('fa-xmark');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+
+                // Auto close mobile menu when nav link is clicked
+                document.querySelectorAll('.nav-links a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navLinks.classList.remove('active');
+                        const icon = navToggle.querySelector('i');
+                        if (icon) {
+                            icon.classList.remove('fa-xmark');
+                            icon.classList.add('fa-bars');
+                        }
+                    });
                 });
             }
 

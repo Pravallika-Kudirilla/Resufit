@@ -132,10 +132,23 @@
     }
     
     .split-right {
-        padding: 2rem 2rem 4rem;
+        padding: 2rem 1.5rem 4rem;
         box-shadow: none;
         align-items: flex-start;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .split-form-container {
+        margin: 0 auto;
+        width: 100%;
     }
     
     .split-header h2 { font-size: 2rem; }
 }
+
+[data-theme="dark"] .split-right {
+    background: #0f172a;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.2);
+}
+

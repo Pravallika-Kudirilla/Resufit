@@ -3,16 +3,16 @@
    ========================================= */
 
 :root {
-    --primary-color: #4f46e5; /* Deeper Indigo for light bg */
-    --primary-hover: #4338ca;
-    --secondary-color: #db2777; /* Deep Pink */
+    --primary-color: #2563eb; /* Blue 600 for light bg */
+    --primary-hover: #1d4ed8; /* Blue 700 */
+    --secondary-color: #0284c7; /* Sky 600 */
     
     --bg-gradient-start: #f8fafc; /* Very light slate */
     --bg-gradient-end: #e2e8f0; /* Light slate */
     
     --glass-bg: rgba(255, 255, 255, 0.7); /* More opaque for light theme */
     --glass-border: rgba(255, 255, 255, 0.5);
-    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07); /* Subtle dark shadow */
+    --glass-shadow: 0 8px 32px 0 rgba(37, 99, 235, 0.07); /* Subtle blue shadow */
     
     --text-primary: #0f172a; /* Slate 900 */
     --text-secondary: #475569; /* Slate 600 */
@@ -26,9 +26,9 @@
 }
 
 [data-theme="dark"] {
-    --primary-color: #6366f1; /* Lighter Indigo for dark bg */
-    --primary-hover: #4f46e5;
-    --secondary-color: #ec4899; /* Lighter Pink */
+    --primary-color: #3b82f6; /* Lighter Blue for dark bg */
+    --primary-hover: #2563eb;
+    --secondary-color: #38bdf8; /* Lighter Sky Blue */
     
     --bg-gradient-start: #0f172a; /* Slate 900 */
     --bg-gradient-end: #020617; /* Slate 950 */
@@ -82,7 +82,7 @@ body {
 .shape-1 {
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(199,210,254,0.8) 0%, rgba(199,210,254,0) 70%);
+    background: radial-gradient(circle, rgba(191,219,254,0.8) 0%, rgba(191,219,254,0) 70%);
     top: -200px;
     left: -200px;
 }
@@ -90,7 +90,7 @@ body {
 .shape-2 {
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(251,207,232,0.8) 0%, rgba(251,207,232,0) 70%);
+    background: radial-gradient(circle, rgba(186,230,253,0.8) 0%, rgba(186,230,253,0) 70%);
     bottom: -100px;
     right: -100px;
     animation-delay: -5s;
@@ -649,6 +649,8 @@ body {
 .modal-dialog {
     width: 100%;
     max-width: 450px;
+    max-height: 90vh;
+    overflow-y: auto;
     transform: scale(0.95) translateY(20px);
     opacity: 0;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -839,10 +841,11 @@ body {
 
 .btn-google {
     background: white;
-    color: var(--text-primary);
+    color: #1f2937;
     border: 1px solid #cbd5e1;
     box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
+
 
 .btn-google:hover {
     background: #f8fafc;
@@ -1112,5 +1115,33 @@ body {
     .flow-container::after {
         left: 50%;
     }
+    
+    .hero-buttons {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .hero-buttons .btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
 }
+
+@media (max-width: 480px) {
+    .form-options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+/* Dark theme overrides for standard inputs to prevent white-on-white text */
+[data-theme="dark"] .input-group input,
+[data-theme="dark"] .input-group textarea {
+    background: #0f172a;
+    border-color: #334155;
+    color: #f8fafc;
+}
+
 

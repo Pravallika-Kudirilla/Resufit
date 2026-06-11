@@ -608,21 +608,17 @@ def home():
     )
 
 def is_resume_text(text):
+    if not text or len(text.strip()) < 10:
+        return False
 
     resume_keywords = [
-        "experience",
-        "education",
-        "skills",
-        "projects",
-        "certifications",
-        "linkedin",
-        "github",
-        "objective",
-        "summary",
-        "intern",
-        "university",
-        "bachelor",
-        "master"
+        "experience", "work", "history", "employment", "job", "position",
+        "education", "school", "university", "college", "degree", "bachelor", "master", "phd", "gpa", "academic",
+        "skills", "technologies", "languages", "tools", "expertise",
+        "projects", "activities", "publications", "leadership",
+        "certifications", "certs", "awards", "courses",
+        "linkedin", "github", "email", "phone", "contact", "address",
+        "summary", "profile", "objective", "about"
     ]
 
     text_lower = text.lower()
@@ -633,7 +629,7 @@ def is_resume_text(text):
         if word in text_lower:
             score += 1
 
-    return score >= 3
+    return score >= 2
 
 @app.route("/builder")
 def builder():
