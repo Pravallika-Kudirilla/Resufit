@@ -101,7 +101,7 @@ Resufit/
 ### Local Setup
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/username/Resufit.git
+   git clone https://github.com/Pravallika-Kudirilla/Resufit
    cd Resufit
    ```
 
@@ -163,8 +163,7 @@ Resufit/
 
 ## Live Application Link
 Access the production application live here:
-👉 **[Live Application Link](https://resufit-example.ngrok-free.dev)** *(Placeholder: Update with actual live deployment URI)*
-
+👉 **[Live Application Link]( https://resufit-zrhz.onrender.com)** 
 ---
 
 ## Live Demo Walkthrough Guide
